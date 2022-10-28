@@ -2,6 +2,8 @@ const Sauce = require("../models/sauce.model.js");
 const dbConfig = require("../config/db.config.js");
 const PORT = 3000;
 
+///////// ADD SAUCE /////////
+
 exports.createSauce = (req, res, next) => {
   const reqSauce = JSON.parse(req.body.sauce);
   const sauce = new Sauce({
@@ -15,13 +17,15 @@ exports.createSauce = (req, res, next) => {
     usersLiked: [],
     usersDisliked: [],
     userId: req.auth.userId,
-    imageUrl: `${req.protocol}://${dbConfig.HOST}:${PORT}/images/${req.file.filename}`,
+    imageUrl: `${req.protocol}://localhost:${PORT}/images/${req.file.filename}`,
   });
   sauce
     .save()
     .then(() => res.status(201).send({ message: "Sauce sucessfully created." }))
     .catch((err) => res.status(400).send({ message: err }));
 };
+
+///////// ALL SAUCES /////////
 
 exports.getAllSauces = (req, res, next) => {
   Sauce.find({})
@@ -31,6 +35,8 @@ exports.getAllSauces = (req, res, next) => {
     })
     .catch((err) => res.status(400).send({ err }));
 };
+
+///////// SAUCE (detailed page) /////////
 
 exports.getSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
@@ -92,7 +98,7 @@ exports.modifySauce = (req, res, next) => {
         const reqSauce = JSON.parse(req.body.sauce);
         sauce.set({
           ...reqSauce,
-          imageUrl: `${req.protocol}://${dbConfig.HOST}:${PORT}/images/${req.file.filename}`,
+          imageUrl: `${req.protocol}://localhost:${PORT}/images/${req.file.filename}`,
         });
         sauce.save();
       } else {

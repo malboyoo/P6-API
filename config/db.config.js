@@ -1,5 +1,6 @@
 module.exports = {
-  HOST: "localhost",
-  PORT: 27017,
+  USER: "Malbo",
+  ADDRESS: "cluster0.xuzjnbm.mongodb.net",
   DB: "hottakes",
+  PWD: "admin123",
 };

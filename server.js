@@ -25,7 +25,7 @@ app.use(morgan("tiny"));
 
 // connection à la database
 mongoose
-  .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`)
+  .connect(`mongodb+srv://${dbConfig.USER}:${dbConfig.PWD}@${dbConfig.ADDRESS}/${dbConfig.DB}`)
   .then(() => {
     console.log("connected to mongoDB.");
   })
