@@ -6,17 +6,19 @@ const fs = require("fs");
 const cors = require("cors");
 const dbConfig = require("./config/db.config.js");
 
-//import des routes
+// import des routes
 const auth = require("./routes/auth.js");
 const sauces = require("./routes/sauces.js");
 
-//création de l'app express
+// création de l'app express
 const app = express();
 
 // MIDDLEWARE
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
+// récuperer l'information avec le "Content-Type: application/json" sans utiliser JSON.parse()
 app.use(express.json());
+// récuperer l'information avec le "Content-Type: application/x-www-form-urlencoded" (paramètre dans l'URL)
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("tiny"));
 
@@ -30,10 +32,10 @@ mongoose
     console.log("impossible to connect to mongoDB:", err);
   });
 
-//ecoute des requêtes lié à l'authentification
+// écoute des requêtes lié à l'authentification
 app.use("/api/auth", auth);
 
-//ecoute des requêtes lié au sauces
+// écoute des requêtes lié au sauces
 app.use("/api/sauces", sauces);
 
 // PORT
