@@ -6,24 +6,21 @@ const fs = require("fs");
 const cors = require("cors");
 const dbConfig = require("./config/db.config.js");
 
-//import des Routes
-const auth = require("./Routes/auth.js");
-const sauces = require("./Routes/sauces.js");
+//import des routes
+const auth = require("./routes/auth.js");
+const sauces = require("./routes/sauces.js");
 
+//création de l'app express
 const app = express();
 
 // MIDDLEWARE
-
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
-// parse requests of content-type - application/json
 app.use(express.json());
-// parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
-
 app.use(morgan("tiny"));
 
-// connection à la database
+// connexion à la database
 mongoose
   .connect(`mongodb+srv://${dbConfig.USER}:${dbConfig.PWD}@${dbConfig.ADDRESS}/${dbConfig.DB}`)
   .then(() => {

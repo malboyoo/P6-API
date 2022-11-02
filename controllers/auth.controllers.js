@@ -6,15 +6,13 @@ const config = require("../config/auth.config.js");
 ///////// SIGN UP /////////
 
 exports.checkEmail = (req, res, next) => {
-  User.findOne({ email: req.body.email })
-    .exec()
-    .then((user) => {
-      if (user) {
-        res.status(400).send({ message: "This email is already registered." });
-        return;
-      }
-      next();
-    });
+  User.findOne({ email: req.body.email }).then((user) => {
+    if (user) {
+      res.status(400).send({ message: "This email is already registered." });
+      return;
+    }
+    next();
+  });
 };
 
 exports.createUser = (req, res, next) => {
@@ -32,7 +30,6 @@ exports.createUser = (req, res, next) => {
 
 exports.isUserExist = (req, res, next) => {
   User.findOne({ email: req.body.email })
-    .exec()
     .then((user) => {
       if (!user) {
         res.status(404).send({ message: "User not found." });
@@ -42,6 +39,8 @@ exports.isUserExist = (req, res, next) => {
     })
     .catch((error) => res.status(500).send({ message: error }));
 };
+
+// encode un token grace à l'userId et la clé secrète d'encodage
 const tokenAndId = (user) => {
   const token = jwt.sign({ userId: user._id }, config.secret, { expiresIn: 86400 }); //24h
   return {
@@ -50,9 +49,9 @@ const tokenAndId = (user) => {
   };
 };
 
+// vérifie que le mot de passe utilisateur est égal à celui dans la database(crypté)
 exports.passwordCheck = (req, res, next) => {
   User.findOne({ email: req.body.email })
-    .exec()
     .then((user) => {
       const isPasswordValid = bcrypt.compareSync(req.body.password, user.password);
       if (!isPasswordValid) {
