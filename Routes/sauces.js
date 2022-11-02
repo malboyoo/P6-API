@@ -4,6 +4,8 @@ const authToken = require("../middleware/auth.middleware.js");
 const multer = require("../middleware/multer.middleware.js");
 const controller = require("../controllers/sauces.controllers.js");
 
+// le middleware multer récuperer l'information avec le type-application Form-data et permet notamment de récuperer des fichiers
+
 ///////// ADD SAUCE /////////
 router.post("/", authToken, multer, controller.createSauce);
 ///////// ALL SAUCES /////////

@@ -52,12 +52,12 @@ exports.addLikesDislikes = (req, res, next) => {
         sauce.usersDisliked.push(req.auth.userId);
         sauce.dislikes++;
       } else if (req.body.like == 0) {
-        //likes
+        // likes
         if (sauce.usersLiked.includes(req.auth.userId)) {
           const index = sauce.usersLiked.indexOf(req.body.userId);
           sauce.usersLiked.splice(index, 1);
           sauce.likes--;
-          //dislikes
+          // dislikes
         } else if (sauce.usersDisliked.includes(req.auth.userId)) {
           const index = sauce.usersDisliked.indexOf(req.body.userId);
           sauce.usersDisliked.splice(index, 1);
