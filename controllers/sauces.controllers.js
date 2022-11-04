@@ -24,7 +24,6 @@ exports.createSauce = (req, res, next) => {
 ///////// ALL SAUCES /////////
 exports.getAllSauces = (req, res, next) => {
   Sauce.find({})
-    .exec()
     .then((sauces) => {
       res.status(200).send(JSON.stringify(sauces));
     })
@@ -34,7 +33,6 @@ exports.getAllSauces = (req, res, next) => {
 ///////// SAUCE (detailed page) /////////
 exports.getSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
-    .exec()
     .then((sauce) => {
       res.status(200).send(JSON.stringify(sauce));
     })
