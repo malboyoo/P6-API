@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const morgan = require("morgan");
-const fs = require("fs");
 const cors = require("cors");
 const dbConfig = require("./config/db.config.js");
 
