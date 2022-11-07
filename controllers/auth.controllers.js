@@ -2,34 +2,29 @@ const User = require("../models/user.model.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config.js");
-
-///////// SIGN UP /////////
-
-exports.checkEmail = (req, res, next) => {
-  User.findOne({ email: req.body.email }).then((user) => {
-    if (user) {
-      res.status(400).send({ message: "This email is already registered." });
-      return;
-    }
-    next();
-  });
-};
+const secretKey = require("../config/auth.config");
+const passwordSchema = require("../models/passwordValidator.model.js");
+const CryptoJS = require("crypto-js");
 
 exports.createUser = (req, res, next) => {
-  const user = new User({
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password),
-  });
-  user
-    .save()
-    .then(() => res.status(201).send({ message: "User was registered successfully." }))
-    .catch((err) => res.status(400).send({ message: err }));
+  if (passwordSchema.validate(req.body.password)) {
+    const user = new User({
+      email: hashedEmail(req.body.email, secretKey),
+      password: bcrypt.hashSync(req.body.password),
+    });
+    user
+      .save()
+      .then(() => res.status(201).send({ message: "User was registered successfully." }))
+      .catch((err) => res.status(400).send({ message: err }));
+  } else {
+    res.status(401).send({ message: "password not valid." });
+  }
 };
 
 ////////// LOGIN //////////
 
 exports.isUserExist = (req, res, next) => {
-  User.findOne({ email: req.body.email })
+  User.findOne({ email: hashedEmail(req.body.email, secretKey) })
     .then((user) => {
       if (!user) {
         res.status(404).send({ message: "User not found." });
@@ -51,7 +46,7 @@ const tokenAndId = (user) => {
 
 // vérifie que le mot de passe utilisateur est égal à celui dans la database(crypté)
 exports.passwordCheck = (req, res, next) => {
-  User.findOne({ email: req.body.email })
+  User.findOne({ email: hashedEmail(req.body.email, secretKey) })
     .then((user) => {
       const isPasswordValid = bcrypt.compareSync(req.body.password, user.password);
       if (!isPasswordValid) {
@@ -61,4 +56,9 @@ exports.passwordCheck = (req, res, next) => {
       res.status(200).send(tokenAndId(user));
     })
     .catch((error) => res.status(500).send({ message: error }));
+};
+
+// on chiffre l'email avant de le créer/comparer dans la base de données
+const hashedEmail = (email, secretKey) => {
+  return CryptoJS.HmacSHA256(email, secretKey.secret).toString();
 };
