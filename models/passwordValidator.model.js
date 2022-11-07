@@ -2,6 +2,8 @@ const passwordValidator = require("password-validator");
 
 const passwordSchema = new passwordValidator();
 
+// le mot de passe va devoir répondre à ces critères.
+
 passwordSchema
   .is()
   .min(8) // longueur mini 8
