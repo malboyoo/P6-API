@@ -4,6 +4,7 @@ const path = require("path");
 const morgan = require("morgan");
 const cors = require("cors");
 const dbConfig = require("./config/db.config.js");
+const limiter = require("./middleware/rateLimit.middleware");
 
 // import des routes
 const auth = require("./routes/auth.js");
@@ -20,6 +21,8 @@ app.use(express.json());
 // récuperer l'information avec le "Content-Type: application/x-www-form-urlencoded" (paramètre dans l'URL)
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("tiny"));
+// middleware destiné à limité le nombre de requêtes d'un utilisateur
+app.use(limiter);
 
 // connexion à la database
 mongoose
